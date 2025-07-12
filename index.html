@@ -544,6 +544,7 @@
         <div class="controls">
             <button id="generateBtn">🎬 Make Pet Talk</button>
             <button id="stopBtn" style="display: none;">⏹️ Stop</button>
+            <button id="debugBtn" onclick="debugKieAI()" style="background: #ff6b6b;">🔍 Debug API</button>
         </div>
 
         <div class="loading" id="loading">
@@ -1201,6 +1202,39 @@
         
         // Set initial mode
         setGenerationMode('image-to-video');
+        
+        // Debug function
+        window.debugKieAI = async function() {
+            const key = apiKey.value;
+            if (!key) {
+                alert('Please enter your Kie AI API key first!');
+                return;
+            }
+            
+            console.log('🔍 Testing Kie AI API...');
+            
+            try {
+                const response = await fetch('https://talking-pet-csx4.vercel.app/api/debug-kie', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ apiKey: key })
+                });
+                
+                const result = await response.json();
+                console.log('🔍 Debug result:', result);
+                
+                if (result.success) {
+                    alert('✅ API test successful! Check console for details.');
+                } else {
+                    alert('❌ API test failed: ' + JSON.stringify(result.data));
+                }
+            } catch (error) {
+                console.error('Debug error:', error);
+                alert('❌ Debug test error: ' + error.message);
+            }
+        };
     </script>
 </body>
 </html>
